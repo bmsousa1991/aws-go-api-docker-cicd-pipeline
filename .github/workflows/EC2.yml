@@ -12,14 +12,7 @@ jobs:
         with:
           # Artifact name
           name: programa
-
       - uses: actions/checkout@v4
-
-      - name: Set up SSH key permissions
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/api-go-dev.pem
-          chmod 400 ~/.ssh/api-go-dev.pem
 
       - name: Deploy to Staging server
         uses: easingthemes/ssh-deploy@main
@@ -27,9 +20,8 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: /home/${{ secrets.REMOTE_TARGET }}
+          TARGET: /home/${{ secrets.REMOTE_USER }}
           EXCLUDE: "postgres-data"
-          ARGS: "-vvv"  # Adiciona debug para SSH
 
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.3
