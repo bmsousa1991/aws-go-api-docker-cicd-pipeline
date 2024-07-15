@@ -4,39 +4,40 @@ on:
   workflow_call:
 
 jobs:
-
   EC2:
     runs-on: ubuntu-latest
     steps:
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v4.1.8
-      with:
-    # Artifact name
-        name: programa
-    - uses: actions/checkout@v4
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v4.1.8
+        with:
+          # Artifact name
+          name: programa
 
-    - name: Deploy to Staging server
-      uses: easingthemes/ssh-deploy@main
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-        REMOTE_USER: ${{ secrets.REMOTE_USER }}
-        TARGET: /home/${{ secrets.REMOTE_TARGET }}
-        EXCLUDE: "postgres-data"
+      - uses: actions/checkout@v4
 
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 22
-        script: |
-          export HOST=${{ secrets.DBHOST }}
-          export USER=${{ secrets.DBUSER }}
-          export PASSWORD=${{ secrets.DBPASSWORD }}
-          export DBNAME=${{ secrets.DBNAME }}
-          export PORT=${{ secrets.DBPORT }}
-          export DBPORT=${{ secrets.DBPORT }}
-          chmod +x main
-          nohup ./main &
+      - name: Deploy to Staging server
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: /home/${{ secrets.REMOTE_TARGET }}
+          EXCLUDE: "postgres-data"
+          ARGS: "-vvv"  # Adiciona debug para SSH
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            export HOST=${{ secrets.DBHOST }}
+            export USER=${{ secrets.DBUSER }}
+            export PASSWORD=${{ secrets.DBPASSWORD }}
+            export DBNAME=${{ secrets.DBNAME }}
+            export PORT=8000
+            export DBPORT=${{ secrets.DBPORT }}
+            chmod +x main
+            nohup ./main &
