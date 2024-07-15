@@ -17,7 +17,7 @@ jobs:
       - name: Add public key to authorized_keys on remote server
         run: |
           ssh-keygen -y -f ~/.ssh/deploy_key > ~/.ssh/api-go-dev.pem
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys" < ~/.ssh/api-go-dev.pem     
+          ssh -i ~/.ssh/api-go-dev.pem -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys" < ~/.ssh/api-go-dev.pem     
 
       - name: Deploy to Staging server
         uses: easingthemes/ssh-deploy@main
