@@ -1,20 +1,20 @@
-name: Entrega continua
+name: Entrega contínua
 
 on:
   workflow_call:
 
 jobs:
-
   EC2:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
     - name: Download a Build Artifact
       uses: actions/download-artifact@v4.1.8
       with:
-    # Artifact name
         name: programa
-    - uses: actions/checkout@v4
-    
+
     - name: Deploy to Staging server
       uses: easingthemes/ssh-deploy@main
       env:
@@ -23,8 +23,8 @@ jobs:
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
         TARGET: /home/${{ secrets.REMOTE_USER }}
         EXCLUDE: "postgres-data"
-        
-    - name: executing remote ssh commands using password
+
+    - name: Execute remote SSH commands
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.REMOTE_HOST }}
@@ -38,5 +38,4 @@ jobs:
           export DBNAME=${{ secrets.DBNAME }}
           export DBPORT=${{ secrets.DBPORT }}
           export PORT=8000
-        
-        
+          # Add additional commands to execute on the remote server
