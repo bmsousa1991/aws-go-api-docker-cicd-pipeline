@@ -7,9 +7,6 @@ jobs:
   EC2:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
     - name: Download a Build Artifact
       uses: actions/download-artifact@v4.1.8
       with:
