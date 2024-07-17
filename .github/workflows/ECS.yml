@@ -7,3 +7,5 @@ jobs:
   EC2:
     runs-on: ubuntu-latest
     steps:
+    - name: Get task file
+      run: aws ecs describe-task-definition --task-definition task-api-go --query taskDefinition > task-definition.json
